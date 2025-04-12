@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 
-
-
-
 export type ButtonVariant = 'primary' | 'sencodary' | 'danger' | 'success' ;
 
 
@@ -15,8 +12,8 @@ const buttonVariants = {
     sencodary: 'white',
     danger:'orange',
     success:'blue'
+};
 
-}
 export const ButtonContainer = styled.button<ButtonContainerProps>`
     
     width: 100px;
