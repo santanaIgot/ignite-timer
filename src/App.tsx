@@ -1,6 +1,7 @@
 import { Button } from "./components/button";
 import { ThemeProvider } from "styled-components";
-import { defaultTheme } from "./styles/themes/default";
+import { defaultTheme } from './styles/themes/default'; // CORRETO!
+import { GlobalStyle } from "./styles/global";
 
 export function App() {
   return (
@@ -9,6 +10,7 @@ export function App() {
       <Button color="danger" />
       <Button color="success" />
       <Button />
+      <GlobalStyle/>
     </ThemeProvider>
   );
 }
