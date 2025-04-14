@@ -1,3 +1,9 @@
+
+
 export function History() {
-    return <h1>Home</h1>
+    return (
+        <div className="">
+            <h1>History</h1>
+        </div>
+    )
 }
