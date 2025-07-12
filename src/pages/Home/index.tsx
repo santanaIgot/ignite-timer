@@ -1,13 +1,14 @@
-import { HandPalm, Play, Watch } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { HomeContainer, StartCountDownButton, StopCountDownButton } from "./styles";
-import {useForm, UseFormHandleSubmit, UseFormReset, UseFormWatch} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod'
-import * as zod from 'zod'
-import { useEffect, useState } from "react";
-import {differenceInSeconds} from "date-fns";
+import { UseFormHandleSubmit, UseFormReset, UseFormWatch} from 'react-hook-form';
+import { createContext, useContext, useEffect, useState } from "react";
 import { NewCycleForm } from "./components/NewCycleForm";
 import { CountDown } from "./components/CountDown";
 
+  // interface newCycleFormData {
+  //   task: string ,
+  //   minutesAmount: number,
+  // }
 
 export type Cycle = {
     id: string,
@@ -18,25 +19,39 @@ export type Cycle = {
     fineshedDate?: Date,
 }
 
-interface HomeProps {
-  amountSecondsPassed: number;
-  task: string ,
-  minutesAmount: number,
-  minutes: string,
-  seconds: string,
-  setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>,
-  handleSubmit: UseFormHandleSubmit<{minutesAmount: number;task: string;}, {minutesAmount: number; task: string;}>
-  watch: UseFormWatch<{minutesAmount: number;task: string;}>,
-  reset: UseFormReset<{minutesAmount: number;task: string;}>
-}
+// interface HomeProps {
+//   amountSecondsPassed: number;
+//   task: string ,
+//   minutesAmount: number,
+//   minutes: string,
+//   seconds: string,
+//   setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>,
+//   handleSubmit: UseFormHandleSubmit<{minutesAmount: number;task: string;}, {minutesAmount: number; task: string;}>
+//   watch: UseFormWatch<{minutesAmount: number;task: string;}>,
+//   reset: UseFormReset<{minutesAmount: number;task: string;}>
+// }
 
 type newCycleFormData = {
     task: string;
     minutesAmount: number;
 }
 
+export const HomeContext = createContext({}as {
+  amountSecondsPassed: number,
+  setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>;
+  handleSubmit: UseFormHandleSubmit<newCycleFormData>;
+  watch:  UseFormWatch<{task: string;minutesAmount: number;}>;
+  reset: UseFormReset<newCycleFormData>;
+  minutes: string;
+  seconds: string;
+  task: string;
+  minutesAmount: number;
 
-export function Home({amountSecondsPassed, minutes, seconds, setAmountSecondsPassed, handleSubmit, reset,watch}: HomeProps) {
+})
+
+
+export function Home() {
+  const {amountSecondsPassed, watch, handleSubmit, setAmountSecondsPassed, reset, minutes, seconds} = useContext(HomeContext);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
   const [cycles, setCycles] = useState<Cycle[]>([]);
 
@@ -92,10 +107,7 @@ export function Home({amountSecondsPassed, minutes, seconds, setAmountSecondsPas
 
 
 
-  // interface newCycleFormData {
-  //   task: string ,
-  //   minutesAmount: number,
-  // }
+
 
 
   //form é um objeto onde tem várias funções dentro dele 
@@ -112,11 +124,12 @@ export function Home({amountSecondsPassed, minutes, seconds, setAmountSecondsPas
 
   
   return (
+
+    <HomeContext.Provider value={{amountSecondsPassed, setAmountSecondsPassed, handleSubmit, watch, reset, minutes: String(Math.floor(currentSeconds / 60)).padStart(2, '0'), seconds: String(currentSeconds % 60).padStart(2, '0'), task, minutesAmount: activeCycle ? activeCycle.minutesAmount : 0}}>
     <HomeContainer >
       <form onSubmit={handleSubmit(handleCreateNewCycle)}>
-        <NewCycleForm activeCycle={activeCycle} setCycles={setCycles}/>
-        <CountDown activeCycle={activeCycle} setCycles={setCycles} currentSeconds={currentSeconds} 
-        activeCycleId={activeCycleId} cycles={cycles} totalSenconds={totalSenconds}/>
+        <NewCycleForm />
+        <CountDown />
         {activeCycle ? (
           <StopCountDownButton onClick={handleInterruptCycle}  type="button">
           Interromper <HandPalm size={24}/>
@@ -128,6 +141,8 @@ export function Home({amountSecondsPassed, minutes, seconds, setAmountSecondsPas
         )}
       </form>
     </HomeContainer>
+
+    </HomeContext.Provider>
   );
 }
 
