@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { HistoryContainer, ListContainer, Status } from "./styles";
 import { CyclesContext } from "../../contexts/CyxlesContext";
+import {formatDistanceToNow} from "date-fns"
 
 export function History() {
 
@@ -12,9 +13,9 @@ export function History() {
     <HistoryContainer>
       <h1>Meu histórico</h1>
 
-      <pre>
+      {/* <pre>
         {JSON.stringify(cycles, null, 2)}
-      </pre>
+      </pre> */}
 
       <ListContainer>
         <table>
@@ -27,46 +28,33 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>2 meses</td>
-              
-              
-              <td>
-                  <Status statusColor="green">Concluido</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>2 meses</td>
-              
-              
-              <td>
-                  <Status statusColor="green">Concluido</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>2 meses</td>
-              
-              
-              <td>
-                  <Status statusColor="green">Concluido</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>2 meses</td>
-              
-              
-              <td>
-                  <Status statusColor="green">Concluido</Status>
-              </td>
-            </tr>
+            {cycles.map(cycles => {
+              return(
+                    <tr key={cycles.id}>
+                      <td>{cycles.task}</td>
+                      <td>{cycles.minutesAmount} minutos</td>
+                      <td>{formatDistanceToNow(cycles.startDate, {
+                        addSuffix: true
+                      })} minutos</td>
+                      {/* <td>{cycles.startDate.toDateString()}</td> */}
+                      <td>
+                        {/* só executara status se finesh date for verdadeiro  */}
+                          {cycles.fineshedDate && (
+                            <Status statusColor="green">Concluído</Status>
+                          )}
+
+                            {cycles.interruptedDate && (
+                            <Status statusColor="red">Interrompido</Status>
+                          )}
+
+
+                          {(!cycles.fineshedDate && !cycles.interruptedDate) && (
+                            <Status statusColor="yellow">Em andamento</Status>
+                          )}
+                      </td>
+                    </tr>
+              )
+            })}
           </tbody>
         </table>
       </ListContainer>
