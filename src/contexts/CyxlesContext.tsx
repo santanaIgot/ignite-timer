@@ -1,4 +1,4 @@
-import { Children, createContext, useState } from "react";
+import { createContext, useState } from "react";
 import { Cycle } from "../pages/Home";
 
 
@@ -15,7 +15,8 @@ interface CyclesContextType {
   setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>,
   amountSecondsPassed: number,
   handleCreateNewCycle(data: CreateCycleData): void,
-  handleInterruptCycle(): void
+  handleInterruptCycle(): void,
+  
 }
 
 export const CyclesContext = createContext({} as CyclesContextType);
