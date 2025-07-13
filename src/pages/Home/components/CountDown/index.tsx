@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { CountDownContainer, Separetor } from "./styles";
 import { differenceInSeconds } from "date-fns";
-import { CyclesContext } from "../..";
+import { CyclesContext } from "../../../../contexts/CyxlesContext";
+
 
 // interface CountDownProps {
 //   activeCycle: any;
