@@ -21,7 +21,7 @@ function Countown() {
     
 }
 
-export function Home() {
+export function Context() {
     const [activeCycle, setActiveCycle] = useState(0);
     
     return(
