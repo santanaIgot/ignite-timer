@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 import { Cycle } from "../pages/Home";
 
 
@@ -10,7 +10,6 @@ interface CreateCycleData {
 interface CyclesContextType {
   activeCycle: Cycle | undefined,
   cycles: Cycle[],
-  setCycles: React.Dispatch<React.SetStateAction<Cycle[]>>,
   activeCycleId: string | null,
   setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>,
   amountSecondsPassed: number,
@@ -26,7 +25,13 @@ export const CyclesContext = createContext({} as CyclesContextType);
 export function CyclesContextProvider({children}:any){
 
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
-  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [cycles, dispatch] = useReducer((state:Cycle[] , action: any ) => {
+        console.log(state);
+        console.log(action);
+        
+        
+    return state
+  }, []);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
   const activeCycle = cycles.find((cycle) => cycle.id == activeCycleId);
 
@@ -38,8 +43,13 @@ export function CyclesContextProvider({children}:any){
         minutesAmount: data.minutesAmount,
         startDate: new Date(),
       };
-  
-      setCycles((state) => [...state, newCycle]);
+      dispatch({
+        type:'ADD_NEW_CYCLE',
+        payload:{
+          newCycle
+        }
+      })
+      // setCycles((state) => [...state, newCycle]);
       setActiveCycleId(id);
       setAmountSecondsPassed(0);
       console.log(data);
@@ -47,22 +57,28 @@ export function CyclesContextProvider({children}:any){
     }
   
     function handleInterruptCycle() {
-      setCycles(
-        cycles.map((cycle) => {
-          if (cycle.id == activeCycleId) {
-            return { ...cycle, interruptDate: new Date() };
-          } else {
-            return cycle;
-          }
-        })
-      );
+      dispatch({
+        type:'INTERRUPT_CURRENT_CYCLE',
+        payload:{
+          activeCycleId
+        }
+      })
+      // setCycles(
+      //   cycles.map((cycle) => {
+      //     if (cycle.id == activeCycleId) {
+      //       return { ...cycle, interruptDate: new Date() };
+      //     } else {
+      //       return cycle;
+      //     }
+      //   })
+      // );
       setActiveCycleId(null);
     }
     return(
          <CyclesContext.Provider value={{activeCycle, 
          activeCycleId, 
          cycles, 
-         setCycles, 
+         
          setAmountSecondsPassed, 
          amountSecondsPassed,
          handleCreateNewCycle, 
