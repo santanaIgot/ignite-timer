@@ -1,5 +1,6 @@
 import { createContext, useReducer, useState } from "react";
 import { Cycle } from "../pages/Home";
+import { ActionsTypes, cyclesReducer } from "../reducers/cycles";
 
 interface CreateCycleData {
   task: string;
@@ -16,54 +17,15 @@ interface CyclesContextType {
   handleInterruptCycle(): void;
 }
 
-interface CycleState {
-  cycles: Cycle[];
-  activeCycleId: string | null;
-}
+
 
 export const CyclesContext = createContext({} as CyclesContextType);
 
 export function CyclesContextProvider({ children }: any) {
-  const [cycleState, dispatch] = useReducer(
-    (state: CycleState, action: any) => {
-      console.log("Valor da variável cycles", state);
-      console.log("Conteúdo do dispatch", action);
-
-      if (action.type == "ADD_NEW_CYCLE") {
-        return {
-          ...state,
-          cycles: [...state.cycles, action.payload.newCycle],
-          activeCycleId: action.payload.newCycle.id,
-        };
-      }
-
-      
-
-      if (action.type == "INTERRUPT_CURRENT_CYCLE") {
-        console.log('id',state.activeCycleId);
-        
-        return {
-          ...state,
-          cycles: 
-            state.cycles.map((cycle) => {
-              if (cycle.id == state.activeCycleId) {
-                return { ...cycle, interruptDate: new Date() };
-              } else {
-                return cycle;
-              }
-            }),
-        
-          activeCycleId: null,
-        };
-      }
-
-      return state;
-    },
-    {
-      cycles: [],
-      activeCycleId: null,
-    }
-  );
+  const [cycleState, dispatch] = useReducer(cyclesReducer, {
+    cycles: [],
+    activeCycleId: null
+  });
 
   const { cycles, activeCycleId } = cycleState;
 
@@ -79,7 +41,7 @@ export function CyclesContextProvider({ children }: any) {
       startDate: new Date(),
     };
     dispatch({
-      type: "ADD_NEW_CYCLE",
+      type: ActionsTypes.ADD_NEW_CYCLE,
       payload: {
         newCycle,
       },
@@ -93,7 +55,7 @@ export function CyclesContextProvider({ children }: any) {
 
   function handleInterruptCycle() {
     dispatch({
-      type: "INTERRUPT_CURRENT_CYCLE",
+      type: ActionsTypes.INTERRUPT_CURRENT_CYCLE,
       payload: {
         activeCycleId,
       },
