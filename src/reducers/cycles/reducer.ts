@@ -1,4 +1,5 @@
-import { Cycle } from "../pages/Home";
+import { Cycle } from "../../pages/Home";
+import { ActionsTypes } from "./actions";
 
 
 
@@ -8,10 +9,7 @@ interface CycleState {
 }
 
 
-export enum ActionsTypes {
-    ADD_NEW_CYCLE = "ADD_NEW_CYCLE",
-    INTERRUPT_CURRENT_CYCLE = "INTERRUPT_CURRENT_CYCLE"
-}
+
 
 export function cyclesReducer(state: CycleState, action: any){
       console.log("Valor da variável cycles", state);

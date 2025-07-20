@@ -1,6 +1,7 @@
 import { createContext, useReducer, useState } from "react";
 import { Cycle } from "../pages/Home";
-import { ActionsTypes, cyclesReducer } from "../reducers/cycles";
+import { ActionsTypes, cyclesReducer } from "../reducers/cycles/reducer";
+import { addNewCycleAction, interruptCurrentCycleAction } from "../reducers/cycles/actions";
 
 interface CreateCycleData {
   task: string;
@@ -40,12 +41,7 @@ export function CyclesContextProvider({ children }: any) {
       minutesAmount: data.minutesAmount,
       startDate: new Date(),
     };
-    dispatch({
-      type: ActionsTypes.ADD_NEW_CYCLE,
-      payload: {
-        newCycle,
-      },
-    });
+    dispatch(addNewCycleAction(newCycle));
     // setCycles((state) => [...state, newCycle]);
     // setActiveCycleId(id);
     setAmountSecondsPassed(0);
@@ -54,12 +50,7 @@ export function CyclesContextProvider({ children }: any) {
   }
 
   function handleInterruptCycle() {
-    dispatch({
-      type: ActionsTypes.INTERRUPT_CURRENT_CYCLE,
-      payload: {
-        activeCycleId,
-      },
-    });
+    dispatch(interruptCurrentCycleAction());
     // setCycles(
     //   cycles.map((cycle) => {
     //     if (cycle.id == activeCycleId) {
