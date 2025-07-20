@@ -18,12 +18,12 @@ interface HomeContextType {
   setAmountSecondsPassed: React.Dispatch<React.SetStateAction<number>>
 }
 
-
-
-
 export function CountDown() {
-  const { activeCycle, cycles, setCycles, activeCycleId, setAmountSecondsPassed,amountSecondsPassed } = useContext(CyclesContext);
+  const { activeCycle, activeCycleId, setAmountSecondsPassed,amountSecondsPassed } = useContext(CyclesContext);
   const totalSenconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
+
+  console.log('Total seconds',totalSenconds);
+  
   useEffect(() => {
     let interval: number;
     if (activeCycle) {
@@ -33,15 +33,15 @@ export function CountDown() {
           activeCycle.startDate
         );
         if (secondsDifference >= totalSenconds) {
-          setCycles(
-            cycles.map((cycle) => {
-              if (cycle.id == activeCycleId) {
-                return { ...cycle, fineshedDate: new Date() };
-              } else {
-                return cycle;
-              }
-            })
-          );
+          // setCycles(
+          //   cycles.map((cycle) => {
+          //     if (cycle.id == activeCycleId) {
+          //       return { ...cycle, fineshedDate: new Date() };
+          //     } else {
+          //       return cycle;
+          //     }
+          //   })
+          // );
           setAmountSecondsPassed(totalSenconds);
           clearInterval(interval);
         } else {
